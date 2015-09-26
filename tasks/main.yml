@@ -1,2 +1,15 @@
 ---
-# tasks file for h2o
+- name: install cmake
+  apt: pkg=cmake update-cache=yes
+  sudo: yes
+- name: download h2o
+  get_url: url=https://github.com/h2o/h2o/archive/v{{h2o_version}}.tar.gz dest=/tmp/h2o.tgz
+- name: expand h2o
+  command: tar xzf h2o.tgz chdir=/tmp creates=/tmp/h2o-{{h2o_version}}
+- name: cmake h2o
+  command: cmake -DWITH_BUNDLED_SSL=on . chdir=/tmp/h2o-{{h2o_version}} creates=/tmp/h2o-{{h2o_version}}/Makefile
+- name: make h2o
+  command: make chdir=/tmp/h2o-{{h2o_version}} creates=/tmp/h2o-{{h2o_version}}/h2o
+- name: install h2o
+  command: make install chdir=/tmp/h2o-{{h2o_version}} creates=/usr/local/bin/h2o
+  sudo: yes

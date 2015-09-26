@@ -1,2 +1,2 @@
 ---
-# vars file for h2o
+h2o_version: "1.4.5"
